@@ -15,7 +15,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        useMaterial3: true,
+        fontFamily: "Product Sans",
       ),
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -48,7 +51,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const TitleText("Test"),
+            const TextOutput("Page Title", "Page Title"),
+            const TextOutput("Title", "Title"),
+            const TextOutput("Subtitle", "Subtitle"),
+            const TextOutput("Body", "Body"),
+            const TextOutput("Selected List Item", "Selected List Item"),
+            const TextOutput("Unselected List Item", "Unselected List Item"),
+            const TextOutput("Button", "Button"),
             const Text(
               'You have pushed the button this many times:',
             ),

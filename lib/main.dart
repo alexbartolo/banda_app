@@ -58,7 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
             const TextOutput("Selected List Item", "Selected List Item"),
             const TextOutput("Unselected List Item", "Unselected List Item"),
             const TextOutput("Button", "Button"),
-            const TextInput("test", "name"),
+            const TextInput("test", "phone"),
+            const SizedBox(height: 12),
+            const TextInput("test", "time"),
             const Text(
               'You have pushed the button this many times:',
             ),

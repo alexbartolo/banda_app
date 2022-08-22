@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import 'validations.dart';
+
 class TextOutput extends StatelessWidget {
   final String textOutputBody;
   final String textOutputStyle;
@@ -25,11 +27,19 @@ class TextInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textCapitalization: textInputInformation[inputType]!.textCapitalization,
       inputFormatters: [textInputInformation[inputType]!.textEditingFormatter],
-      controller: textInputInformation[inputType]!.textEditingController,
+      validator: textInputInformation[inputType]!.validator,
+      // controller: textInputInformation[inputType]!.textEditingController,
       keyboardType: textInputInformation[inputType]!.textInputType,
       decoration: InputDecoration(
-        labelText: inputName
+        labelText: inputName,
+        labelStyle: textStyles["Body"],
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+        enabledBorder:  OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.black, width: 0.0),
+          borderRadius: BorderRadius.circular(20),
+        )
       ),
     );
   }
@@ -47,18 +57,20 @@ const Map<String, TextStyle> textStyles = {
 
 class TextInputInformation {
   final TextInputType textInputType;
-  final TextEditingController textEditingController = TextEditingController();
+  // final TextEditingController textEditingController = TextEditingController();
   late final TextInputFormatter textEditingFormatter;
+  late final TextCapitalization textCapitalization;
+  final String? Function(String?)? validator;
 
-  TextInputInformation.withFormatter(this.textInputType, this.textEditingFormatter);
-  TextInputInformation.withoutFormatter(this.textInputType) {textEditingFormatter = MaskTextInputFormatter();}
+  TextInputInformation.number(this.textInputType, this.textEditingFormatter, [this.validator]) {textCapitalization = TextCapitalization.none;}
+  TextInputInformation.string(this.textInputType, this.textCapitalization, [this.validator]) {textEditingFormatter = MaskTextInputFormatter();}
 }
 
 Map<String, TextInputInformation> textInputInformation = {
-  "date": TextInputInformation.withFormatter(TextInputType.datetime, MaskTextInputFormatter(mask: "##/##/####", filter: { "#": RegExp(r'[0-9]')})),
-  "time": TextInputInformation.withFormatter(TextInputType.datetime, MaskTextInputFormatter(mask: "##:##", filter: { "#": RegExp(r'[0-9]')})),
-  "email": TextInputInformation.withoutFormatter(TextInputType.emailAddress),
-  "phone": TextInputInformation.withoutFormatter(TextInputType.phone),
-  "name": TextInputInformation.withoutFormatter(TextInputType.name), //check
-  "normal": TextInputInformation.withoutFormatter(TextInputType.text)
+  "date": TextInputInformation.number(TextInputType.datetime, MaskTextInputFormatter(mask: "##/##/####", filter: { "#": RegExp(r'[0-9]')}), validateDate),
+  "time": TextInputInformation.number(TextInputType.datetime, MaskTextInputFormatter(mask: "##:##", filter: { "#": RegExp(r'[0-9]')}), validateTime),
+  "phone": TextInputInformation.number(TextInputType.phone, MaskTextInputFormatter(mask: "########", filter: { "#": RegExp(r'[0-9]')}), validatePhone),
+  "email": TextInputInformation.string(TextInputType.emailAddress, TextCapitalization.none, validateEmail),
+  "name": TextInputInformation.string(TextInputType.name, TextCapitalization.words),
+  "normal": TextInputInformation.string(TextInputType.text, TextCapitalization.sentences)
 };

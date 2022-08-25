@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:checkbox_formfield/checkbox_formfield.dart';
 
 import 'validations.dart';
 
@@ -74,3 +75,17 @@ Map<String, TextInputInformation> textInputInformation = {
   "name": TextInputInformation.string(TextInputType.name, TextCapitalization.words),
   "normal": TextInputInformation.string(TextInputType.text, TextCapitalization.sentences)
 };
+
+class CheckboxInput extends StatelessWidget {
+  final String checkboxName;
+  const CheckboxInput(this.checkboxName, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTileFormField(
+      title: Text(checkboxName),
+      controlAffinity: ListTileControlAffinity.leading,
+    );
+  }
+
+}

@@ -41,6 +41,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void validateAndSave() {
+    final FormState? form = _formKey.currentState;
+    if (form!.validate()) {
+      print('Form is valid');
+    } else {
+      print('Form is invalid');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,9 +69,30 @@ class _MyHomePageState extends State<MyHomePage> {
             const TextOutput("Selected List Item", "Selected List Item"),
             const TextOutput("Unselected List Item", "Unselected List Item"),
             const TextOutput("Button", "Button"),
-            const TextInput("test", "phone"),
-            const SizedBox(height: 12),
-            const TextInput("test", "time"),
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const TextInput("test", "phone"),
+                  const SizedBox(height: 12),
+                  const TextInput("test", "time"),
+                  const SizedBox(height: 12),
+                  const TextInput("test", "date"),
+                  const SizedBox(height: 12),
+                  const TextInput("test", "email"),
+                  const SizedBox(height: 12),
+                  const CheckboxInput("test"),
+                  TextButton(
+                    onPressed: validateAndSave,
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const Text(
               'You have pushed the button this many times:',
             ),

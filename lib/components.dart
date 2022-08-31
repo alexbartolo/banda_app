@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'validations.dart';
 
 class TextOutput extends StatelessWidget {
@@ -52,7 +52,8 @@ const Map<String, TextStyle> textStyles = {
   "Body": TextStyle(fontSize: 24),
   "Selected List Item": TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
   "Unselected List Item": TextStyle(fontSize: 28),
-  "Button": TextStyle(fontSize: 32, fontWeight: FontWeight.bold)
+  "Button": TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+  "test": TextStyle(fontSize: 24)
 };
 
 class TextInputInformation {
@@ -116,11 +117,89 @@ class _CheckboxInputState extends State<CheckboxInput> {
         child: CheckboxListTile(
           title: TextOutput(widget.checkboxName, "Body"),
           controlAffinity: ListTileControlAffinity.leading,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), 
-          onChanged: (bool? value) { setState(() => _value = value as bool); }, 
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          onChanged: (bool? value) {
+            setState(() => _value = value as bool);
+          },
           value: _value,
-
         ));
+  }
+}
+
+class DropdownInput extends StatefulWidget {
+  final List<String> dropdownOptions;
+
+  const DropdownInput(this.dropdownOptions, {Key? key}) : super(key: key);
+
+  @override
+  State<DropdownInput> createState() => _DropdownInputState();
+}
+
+class _DropdownInputState extends State<DropdownInput> {
+  String? _selectedDropdownOption;
+  bool _active = false;
+
+  @override
+  Widget build(BuildContext context) {
+
+    //https://stackoverflow.com/questions/57425552/how-to-move-label-text-to-top-of-the-input-text-field-only-when-i-type-some-text
+
+    return /*Container(
+        height: 62,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey, width: 1),
+        ),
+        // child: DropdownButtonFormField(
+
+        //   decoration: const InputDecoration(
+        //     enabledBorder: InputBorder.none,
+        //     border: InputBorder.none,
+        //   ),
+        //   items: widget.dropdownOptions
+        //       .map((String option) =>
+        //           DropdownMenuItem(value: option, child: Text(option)))
+        //       .toList(),
+        //   onChanged: (value) {
+        //     setState(() => _selectedDropdownOption = value as String);
+        //   },
+        //   value: _selectedDropdownOption,
+        child:*/ DropdownButtonFormField2(
+          decoration: InputDecoration(
+            isDense: true,
+            // label: _active ? Padding(padding: EdgeInsets.only(left: 16), child: TextOutput("dropdown", "test")) : null,
+            label: _active ? Container(color: Colors.transparent.withOpacity(0.5), child: TextOutput("dropdown", "test")) : null,
+            
+            contentPadding: EdgeInsets.zero,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.black, width: 0.0),
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          dropdownDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          isExpanded: true,
+          buttonHeight: 60,
+          buttonDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          barrierDismissible: true,
+          barrierLabel: "test",
+          hint: TextOutput("dropdown", "Body"),
+          buttonPadding: const EdgeInsets.only(left: 12, right: 12),
+          items: widget.dropdownOptions
+              .map((String option) =>
+                  DropdownMenuItem(value: option, child: Text(option)))
+              .toList(),
+          onChanged: (value) {
+            _active = true;
+            setState(() => _selectedDropdownOption = value as String);
+          },
+          value: _selectedDropdownOption,
+        );
   }
 }
 
@@ -146,7 +225,10 @@ class FormInput extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for(var formField in formFields) ...{formField, const SizedBox(height: 12)},
+          for (var formField in formFields) ...{
+            formField,
+            const SizedBox(height: 12)
+          },
           TextButton(
             onPressed: validateAndSave,
             child: const Text(
@@ -158,5 +240,4 @@ class FormInput extends StatelessWidget {
       ),
     );
   }
-  
 }

@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
               TextInput("date", "date"),
               TextInput("email", "email"),
               CheckboxInput("checkbox"),
+              DropdownInput(["test1","test2","test3","test4"])
             ]),
             const Text(
               'You have pushed the button this many times:',

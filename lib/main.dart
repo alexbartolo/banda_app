@@ -62,37 +62,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const TextOutput("Page Title", "Page Title"),
-            const TextOutput("Title", "Title"),
-            const TextOutput("Subtitle", "Subtitle"),
-            const TextOutput("Body", "Body"),
-            const TextOutput("Selected List Item", "Selected List Item"),
-            const TextOutput("Unselected List Item", "Unselected List Item"),
-            const TextOutput("Button", "Button"),
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const TextInput("test", "phone"),
-                  const SizedBox(height: 12),
-                  const TextInput("test", "time"),
-                  const SizedBox(height: 12),
-                  const TextInput("test", "date"),
-                  const SizedBox(height: 12),
-                  const TextInput("test", "email"),
-                  const SizedBox(height: 12),
-                  const CheckboxInput("test"),
-                  TextButton(
-                    onPressed: validateAndSave,
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 20.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            FormInput(const [
+              TextInput("phone", "phone"),
+              TextInput("time", "time"),
+              TextInput("date", "date"),
+              TextInput("email", "email"),
+              CheckboxInput("checkbox"),
+            ]),
             const Text(
               'You have pushed the button this many times:',
             ),

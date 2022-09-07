@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'validations.dart';
 
 class TextOutput extends StatelessWidget {
@@ -138,68 +137,35 @@ class DropdownInput extends StatefulWidget {
 
 class _DropdownInputState extends State<DropdownInput> {
   String? _selectedDropdownOption;
-  bool _active = false;
+  FocusNode? node;
+
+  //TODO: Check how to move items below field, and how to unfocus in case of pressing somewhere else other than item list
 
   @override
   Widget build(BuildContext context) {
-
-    //https://stackoverflow.com/questions/57425552/how-to-move-label-text-to-top-of-the-input-text-field-only-when-i-type-some-text
-
-    return /*Container(
+    return SizedBox(
         height: 62,
-        decoration: BoxDecoration(
+        // child: DropdownButtonHideUnderline(
+        child: DropdownButtonFormField(
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey, width: 1),
-        ),
-        // child: DropdownButtonFormField(
-
-        //   decoration: const InputDecoration(
-        //     enabledBorder: InputBorder.none,
-        //     border: InputBorder.none,
-        //   ),
-        //   items: widget.dropdownOptions
-        //       .map((String option) =>
-        //           DropdownMenuItem(value: option, child: Text(option)))
-        //       .toList(),
-        //   onChanged: (value) {
-        //     setState(() => _selectedDropdownOption = value as String);
-        //   },
-        //   value: _selectedDropdownOption,
-        child:*/ DropdownButtonFormField2(
           decoration: InputDecoration(
-            isDense: true,
-            // label: _active ? Padding(padding: EdgeInsets.only(left: 16), child: TextOutput("dropdown", "test")) : null,
-            label: _active ? Container(color: Colors.transparent.withOpacity(0.5), child: TextOutput("dropdown", "test")) : null,
-            
-            contentPadding: EdgeInsets.zero,
+            label: const TextOutput("dropdown", "test"),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
             enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.black, width: 0.0),
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          dropdownDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          isExpanded: true,
-          buttonHeight: 60,
-          buttonDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          barrierDismissible: true,
-          barrierLabel: "test",
-          hint: TextOutput("dropdown", "Body"),
-          buttonPadding: const EdgeInsets.only(left: 12, right: 12),
           items: widget.dropdownOptions
               .map((String option) =>
                   DropdownMenuItem(value: option, child: Text(option)))
               .toList(),
-          onChanged: (value) {
-            _active = true;
-            setState(() => _selectedDropdownOption = value as String);
-          },
+          onChanged: (value) => setState(() => (value as String).isNotEmpty
+              ? _selectedDropdownOption = value
+              : null),
+          alignment: Alignment.bottomCenter,
           value: _selectedDropdownOption,
-        );
+        ));
   }
 }
 
@@ -239,5 +205,23 @@ class FormInput extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class Button extends StatelessWidget {
+  const Button({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+        onPressed: () => print("test"),
+        // style: ButtonStyle(
+        // shape: OutlineBorder(borderRadius: BorderRadius.circular(20)),
+        // enabledBorder: OutlineInputBorder(
+        //   borderSide: const BorderSide(color: Colors.black, width: 0.0),
+        //   borderRadius: BorderRadius.circular(20),
+        // ),
+        // ),
+        child: const TextOutput("button", "Button"));
   }
 }

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         fontFamily: "Product Sans",
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Components Demo'),
     );
   }
 }
@@ -33,59 +33,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  void validateAndSave() {
-    final FormState? form = _formKey.currentState;
-    if (form!.validate()) {
-      print('Form is valid');
-    } else {
-      print('Form is invalid');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            FormInput(const [
-              TextInput("phone", "phone"),
-              TextInput("time", "time"),
-              TextInput("date", "date"),
-              TextInput("email", "email"),
-              CheckboxInput("checkbox"),
-              DropdownInput(["test1", "test2", "test3", "test4"]),
-              Button()
-            ]),
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+              FormInput(formFields: const [
+                TextInput(inputName: "phone", inputType: "phone"),
+                TextInput(inputName: "time", inputType: "time"),
+                TextInput(inputName: "date", inputType: "date"),
+                TextInput(inputName: "email", inputType: "email"),
+                CheckboxInput(checkboxName: "checkbox"),
+                DropdownInput(
+                    dropdownName: "dropdown",
+                    dropdownOptions: ["test1", "test2", "test3", "test4"]),
+              ],
+              context: context,),
+              const ButtonGroup(buttons: [
+                SecondaryButton(buttonName: "test"),
+                PrimaryButton(buttonName: "primaryy")
+              ])
+            ])));
   }
 }

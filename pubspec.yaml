@@ -37,6 +37,7 @@ dependencies:
   mask_text_input_formatter: ^2.4.0
   checkbox_formfield: ^0.2.0
   dropdown_button2: ^1.7.2
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

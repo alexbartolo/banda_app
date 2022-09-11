@@ -1,5 +1,7 @@
+import 'package:banda_app/models/form.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'validations.dart';
 
@@ -7,7 +9,8 @@ class TextOutput extends StatelessWidget {
   final String textOutputBody;
   final String textOutputStyle;
 
-  const TextOutput(this.textOutputBody, this.textOutputStyle, {Key? key})
+  const TextOutput(
+      {Key? key, required this.textOutputBody, required this.textOutputStyle})
       : super(key: key);
 
   @override
@@ -17,31 +20,83 @@ class TextOutput extends StatelessWidget {
 }
 
 class TextInput extends StatelessWidget {
+  //TODO: Add possible icon?
   final String inputName;
-  // final Icon inputIcon;
   final String inputType;
 
-//this.inputIcon,
-  const TextInput(this.inputName, this.inputType, {Key? key}) : super(key: key);
+  const TextInput({Key? key, required this.inputName, required this.inputType})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      textCapitalization: textInputInformation[inputType]!.textCapitalization,
-      inputFormatters: [textInputInformation[inputType]!.textEditingFormatter],
-      validator: textInputInformation[inputType]!.validator,
-      // controller: textInputInformation[inputType]!.textEditingController,
-      keyboardType: textInputInformation[inputType]!.textInputType,
-      decoration: InputDecoration(
-          labelText: inputName,
-          labelStyle: textStyles["Body"],
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.black, width: 0.0),
-            borderRadius: BorderRadius.circular(20),
-          )),
-    );
+    return Row(children: [
+      Expanded(
+          child: TextFormField(
+        textCapitalization: textInputInformation[inputType]?.textCapitalization
+            as TextCapitalization,
+        inputFormatters: [
+          textInputInformation[inputType]?.textEditingFormatter
+              as TextInputFormatter
+        ],
+        controller: textInputInformation[inputType]?.textEditingController,
+        validator: textInputInformation[inputType]?.validator,
+        keyboardType: textInputInformation[inputType]?.textInputType,
+        decoration: InputDecoration(
+            labelText: inputName,
+            labelStyle: textStyles["Body"],
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.black, width: 0.0),
+              borderRadius: BorderRadius.circular(20),
+            )),
+      )),
+      if (inputType == "date" || inputType == "time")
+        dateOrTimeButton(
+            context: context,
+            type: inputType,
+            textEditingController: textInputInformation[inputType]
+                ?.textEditingController as TextEditingController)
+    ]);
   }
+}
+
+Widget dateOrTimeButton(
+    {required BuildContext context,
+    required String type,
+    required TextEditingController textEditingController}) {
+  return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: SizedBox(
+          height: 62,
+          width: 62,
+          child: IconButton(
+              onPressed: () async {
+                switch (type) {
+                  case "date":
+                    textEditingController.text = DateFormat('dd/MM/yyy').format(
+                        await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now(),
+                                lastDate:
+                                    DateTime(DateTime.now().year + 1, 12, 31))
+                            as DateTime);
+                    break;
+
+                  case "time":
+                    textEditingController.text = (await showTimePicker(
+                            context: context, initialTime: TimeOfDay.now()))
+                        ?.format(context) as String;
+                    break;
+                }
+              },
+              style: IconButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  side: const BorderSide(color: Colors.grey)),
+              icon: type == "date"
+                  ? const Icon(Icons.calendar_month)
+                  : const Icon(Icons.access_time_filled))));
 }
 
 const Map<String, TextStyle> textStyles = {
@@ -49,54 +104,64 @@ const Map<String, TextStyle> textStyles = {
   "Title": TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
   "Subtitle": TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
   "Body": TextStyle(fontSize: 24),
-  "Selected List Item": TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-  "Unselected List Item": TextStyle(fontSize: 28),
-  "Button": TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-  "test": TextStyle(fontSize: 24)
+  "Selected List Item": TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+  "Unselected List Item": TextStyle(fontSize: 24),
+  "Button": TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
 };
 
 class TextInputInformation {
   final TextInputType textInputType;
-  // final TextEditingController textEditingController = TextEditingController();
-  late final TextInputFormatter textEditingFormatter;
-  late final TextCapitalization textCapitalization;
+  TextInputFormatter? textEditingFormatter;
+  TextCapitalization? textCapitalization;
+  TextEditingController textEditingController = TextEditingController();
   final String? Function(String?)? validator;
 
-  TextInputInformation.number(this.textInputType, this.textEditingFormatter,
-      [this.validator]) {
+  TextInputInformation.number(
+      {required this.textInputType,
+      required this.textEditingFormatter,
+      required this.validator}) {
     textCapitalization = TextCapitalization.none;
   }
-  TextInputInformation.string(this.textInputType, this.textCapitalization,
-      [this.validator]) {
+
+  TextInputInformation.string(
+      {required this.textInputType,
+      required this.textCapitalization,
+      this.validator}) {
     textEditingFormatter = MaskTextInputFormatter();
   }
 }
 
 Map<String, TextInputInformation> textInputInformation = {
   "date": TextInputInformation.number(
-      TextInputType.datetime,
-      MaskTextInputFormatter(
+      textInputType: TextInputType.datetime,
+      textEditingFormatter: MaskTextInputFormatter(
           mask: "##/##/####", filter: {"#": RegExp(r'[0-9]')}),
-      validateDate),
+      validator: validateDate),
   "time": TextInputInformation.number(
-      TextInputType.datetime,
-      MaskTextInputFormatter(mask: "##:##", filter: {"#": RegExp(r'[0-9]')}),
-      validateTime),
+      textInputType: TextInputType.datetime,
+      textEditingFormatter: MaskTextInputFormatter(
+          mask: "##:##", filter: {"#": RegExp(r'[0-9]')}),
+      validator: validateTime),
   "phone": TextInputInformation.number(
-      TextInputType.phone,
-      MaskTextInputFormatter(mask: "########", filter: {"#": RegExp(r'[0-9]')}),
-      validatePhone),
+      textInputType: TextInputType.phone,
+      textEditingFormatter: MaskTextInputFormatter(
+          mask: "########", filter: {"#": RegExp(r'[0-9]')}),
+      validator: validatePhone),
   "email": TextInputInformation.string(
-      TextInputType.emailAddress, TextCapitalization.none, validateEmail),
-  "name":
-      TextInputInformation.string(TextInputType.name, TextCapitalization.words),
+      textInputType: TextInputType.emailAddress,
+      textCapitalization: TextCapitalization.none,
+      validator: validateEmail),
+  "name": TextInputInformation.string(
+      textInputType: TextInputType.name,
+      textCapitalization: TextCapitalization.words),
   "normal": TextInputInformation.string(
-      TextInputType.text, TextCapitalization.sentences)
+      textInputType: TextInputType.text,
+      textCapitalization: TextCapitalization.sentences)
 };
 
 class CheckboxInput extends StatefulWidget {
   final String checkboxName;
-  const CheckboxInput(this.checkboxName, {Key? key}) : super(key: key);
+  const CheckboxInput({Key? key, required this.checkboxName}) : super(key: key);
 
   @override
   State<CheckboxInput> createState() => _CheckboxInputState();
@@ -114,7 +179,10 @@ class _CheckboxInputState extends State<CheckboxInput> {
           border: Border.all(color: Colors.grey, width: 1),
         ),
         child: CheckboxListTile(
-          title: TextOutput(widget.checkboxName, "Body"),
+          title: TextOutput(
+              textOutputBody: widget.checkboxName,
+              textOutputStyle:
+                  _value ? "Selected List Item" : "Unselected List Item"),
           controlAffinity: ListTileControlAffinity.leading,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -127,9 +195,12 @@ class _CheckboxInputState extends State<CheckboxInput> {
 }
 
 class DropdownInput extends StatefulWidget {
+  final String dropdownName;
   final List<String> dropdownOptions;
 
-  const DropdownInput(this.dropdownOptions, {Key? key}) : super(key: key);
+  const DropdownInput(
+      {Key? key, required this.dropdownName, required this.dropdownOptions})
+      : super(key: key);
 
   @override
   State<DropdownInput> createState() => _DropdownInputState();
@@ -145,11 +216,11 @@ class _DropdownInputState extends State<DropdownInput> {
   Widget build(BuildContext context) {
     return SizedBox(
         height: 62,
-        // child: DropdownButtonHideUnderline(
         child: DropdownButtonFormField(
           borderRadius: BorderRadius.circular(20),
           decoration: InputDecoration(
-            label: const TextOutput("dropdown", "test"),
+            label: TextOutput(
+                textOutputBody: widget.dropdownName, textOutputStyle: "Body"),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
             enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.black, width: 0.0),
@@ -171,17 +242,17 @@ class _DropdownInputState extends State<DropdownInput> {
 
 class FormInput extends StatelessWidget {
   final List formFields;
-  FormInput(this.formFields, {Key? key}) : super(key: key);
+  final BuildContext? context;
+  FormInput({Key? key, required this.formFields, this.context}) : super(key: key);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void validateAndSave() {
     final FormState? form = _formKey.currentState;
-    if (form!.validate()) {
-      print('Form is valid');
-    } else {
-      print('Form is invalid');
-    }
+
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(SnackBar(
+      content: form!.validate() ? const Text("Form is valid") : const Text("Form is invalid"),
+    ));
   }
 
   @override
@@ -208,20 +279,75 @@ class FormInput extends StatelessWidget {
   }
 }
 
-class Button extends StatelessWidget {
-  const Button({Key? key}) : super(key: key);
+class FormOutput extends StatelessWidget {
+  final TestForm testForm;
+  const FormOutput({Key? key, required this.testForm}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-        onPressed: () => print("test"),
-        // style: ButtonStyle(
-        // shape: OutlineBorder(borderRadius: BorderRadius.circular(20)),
-        // enabledBorder: OutlineInputBorder(
-        //   borderSide: const BorderSide(color: Colors.black, width: 0.0),
-        //   borderRadius: BorderRadius.circular(20),
-        // ),
-        // ),
-        child: const TextOutput("button", "Button"));
+    throw UnimplementedError();
+  }
+
+}
+
+class SecondaryButton extends StatelessWidget {
+  final String buttonName;
+
+  const SecondaryButton({Key? key, required this.buttonName}) : super(key: key);
+
+  //TODO: Add function for onPressed as parameter?
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 4),
+        child: SizedBox(
+            height: 48,
+            child: OutlinedButton(
+                onPressed: () => {},
+                style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.blue),
+                    padding: const EdgeInsets.only(left: 24, right: 24)),
+                child: TextOutput(
+                    textOutputBody: buttonName, textOutputStyle: "Button"))));
+  }
+}
+
+class PrimaryButton extends StatelessWidget {
+  final String buttonName;
+
+  const PrimaryButton({Key? key, required this.buttonName}) : super(key: key);
+
+  //TODO: Add function for onPressed as parameter?
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 4),
+        child: SizedBox(
+            height: 48,
+            child: ElevatedButton(
+                onPressed: () => {},
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    shadowColor: Colors.transparent,
+                    padding: const EdgeInsets.only(left: 24, right: 24)),
+                child: TextOutput(
+                    textOutputBody: buttonName, textOutputStyle: "Button"))));
+  }
+}
+
+class ButtonGroup extends StatelessWidget {
+  final List buttons;
+
+  const ButtonGroup({super.key, required this.buttons});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          for (var button in buttons) ...{button}
+        ]);
   }
 }

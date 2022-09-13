@@ -1,3 +1,4 @@
+import 'package:banda_app/models/form.model.dart';
 import 'package:flutter/material.dart';
 import './components.dart';
 
@@ -40,24 +41,28 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
         ),
         body: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-              FormInput(formFields: const [
-                TextInput(inputName: "phone", inputType: "phone"),
-                TextInput(inputName: "time", inputType: "time"),
-                TextInput(inputName: "date", inputType: "date"),
-                TextInput(inputName: "email", inputType: "email"),
-                CheckboxInput(checkboxName: "checkbox"),
-                DropdownInput(
-                    dropdownName: "dropdown",
-                    dropdownOptions: ["test1", "test2", "test3", "test4"]),
-              ],
-              context: context,),
+            child: SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+              FormInput(
+                formFields: const [
+                  TextInput(inputName: "phone", inputType: "phone"),
+                  TextInput(inputName: "time", inputType: "time"),
+                  TextInput(inputName: "date", inputType: "date"),
+                  TextInput(inputName: "email", inputType: "email"),
+                  CheckboxInput(checkboxName: "checkbox"),
+                  DropdownInput(
+                      dropdownName: "dropdown",
+                      dropdownOptions: ["test1", "test2", "test3", "test4"]),
+                ],
+                context: context,
+              ),
               const ButtonGroup(buttons: [
                 SecondaryButton(buttonName: "test"),
                 PrimaryButton(buttonName: "primaryy")
-              ])
-            ])));
+              ]),
+              FormOutput(testForm: TestForm(phone: "79451263", time: "22:55", date: "25/02/2000", email: "alexj.bartolo@gmail.com", checkbox: "true", dropdownValue: "buq"))
+            ]))));
   }
 }

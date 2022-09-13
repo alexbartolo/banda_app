@@ -103,6 +103,7 @@ const Map<String, TextStyle> textStyles = {
   "Page Title": TextStyle(fontSize: 48, fontWeight: FontWeight.w700),
   "Title": TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
   "Subtitle": TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
+  "Header": TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
   "Body": TextStyle(fontSize: 24),
   "Selected List Item": TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
   "Unselected List Item": TextStyle(fontSize: 24),
@@ -243,7 +244,8 @@ class _DropdownInputState extends State<DropdownInput> {
 class FormInput extends StatelessWidget {
   final List formFields;
   final BuildContext? context;
-  FormInput({Key? key, required this.formFields, this.context}) : super(key: key);
+  FormInput({Key? key, required this.formFields, this.context})
+      : super(key: key);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -251,7 +253,9 @@ class FormInput extends StatelessWidget {
     final FormState? form = _formKey.currentState;
 
     ScaffoldMessenger.of(context as BuildContext).showSnackBar(SnackBar(
-      content: form!.validate() ? const Text("Form is valid") : const Text("Form is invalid"),
+      content: form!.validate()
+          ? const Text("Form is valid")
+          : const Text("Form is invalid"),
     ));
   }
 
@@ -281,13 +285,23 @@ class FormInput extends StatelessWidget {
 
 class FormOutput extends StatelessWidget {
   final TestForm testForm;
-  const FormOutput({Key? key, required this.testForm}): super(key: key);
+  const FormOutput({Key? key, required this.testForm}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      for (var i in testForm.toJson().entries) ...{
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextOutput(textOutputBody: i.key, textOutputStyle: "Header"),
+            TextOutput(textOutputBody: i.value, textOutputStyle: "Body"),
+            const SizedBox(height: 12)
+          ],
+        ),
+      }
+    ]);
   }
-
 }
 
 class SecondaryButton extends StatelessWidget {

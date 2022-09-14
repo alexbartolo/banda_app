@@ -17,8 +17,8 @@ class TextInput extends StatelessWidget {
     return Row(children: [
       Expanded(
           child: TextFormField(
-        textCapitalization: textInputInformationTypes[inputType]?.textCapitalization
-            as TextCapitalization,
+        textCapitalization: textInputInformationTypes[inputType]
+            ?.textCapitalization as TextCapitalization,
         inputFormatters: [
           textInputInformationTypes[inputType]?.textEditingFormatter
               as TextInputFormatter
@@ -35,19 +35,17 @@ class TextInput extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             )),
       )),
-      if (inputType == "date" || inputType == "time")
-        dateOrTimeButton(
-            context: context,
-            type: inputType,
+      if (inputType == "date")
+        DateOrTimeButton.date(
+            textEditingController: textInputInformationTypes[inputType]
+                ?.textEditingController as TextEditingController),
+      if (inputType == "time")
+        DateOrTimeButton.time(
             textEditingController: textInputInformationTypes[inputType]
                 ?.textEditingController as TextEditingController)
     ]);
   }
 }
-
-
-
-
 
 class CheckboxInput extends StatefulWidget {
   final String checkboxName;

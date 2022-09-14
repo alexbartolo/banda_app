@@ -1,6 +1,8 @@
 import 'package:banda_app/models/form.model.dart';
 import 'package:flutter/material.dart';
-import './components.dart';
+import 'package:banda_app/components/button.component.dart';
+import 'package:banda_app/components/input.component.dart';
+import 'package:banda_app/components/output.component.dart';
 
 void main() {
   runApp(const MyApp());

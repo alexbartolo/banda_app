@@ -6,9 +6,7 @@ class TextOutput extends StatelessWidget {
   final String textOutputBody;
   final String textOutputStyle;
 
-  const TextOutput(
-      {Key? key, required this.textOutputBody, required this.textOutputStyle})
-      : super(key: key);
+  const TextOutput({super.key, required this.textOutputBody, required this.textOutputStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -17,22 +15,23 @@ class TextOutput extends StatelessWidget {
 }
 
 class FormOutput extends StatelessWidget {
-  final TestForm testForm;
-  const FormOutput({Key? key, required this.testForm}) : super(key: key);
+  final FormData testForm;
+  const FormOutput({super.key, required this.testForm});
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      for (var i in testForm.toJson().entries) ...{
+      for (var data in testForm.getData.entries) ...{
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextOutput(textOutputBody: i.key, textOutputStyle: "Header"),
-            TextOutput(textOutputBody: i.value, textOutputStyle: "Body"),
+            TextOutput(textOutputBody: data.key, textOutputStyle: "Header"),
+            TextOutput(textOutputBody: data.value, textOutputStyle: "Body"),
             const SizedBox(height: 12)
           ],
         ),
-      }
+      },
+      const Divider(color: Colors.black, thickness: 2)
     ]);
   }
 }

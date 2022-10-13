@@ -1,12 +1,13 @@
+import 'dart:convert';
+
 import 'package:banda_app/models/form.model.dart';
 import 'package:flutter/material.dart';
 import 'package:banda_app/components/button.component.dart';
 import 'package:banda_app/components/input.component.dart';
 import 'package:banda_app/components/output.component.dart';
+import 'utils/global.utils.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -37,6 +38,26 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  void initState() {
+    super.initState();
+    storage.read("test").then((value) {
+      setState(() {
+        if (value != "[]") {
+          storedData = json
+              .decode(json.decode(value))
+              .map<FormData>(
+                (testValue) => FormData.from(
+                  newData: testValue,
+                  keys: testData,
+                ),
+              )
+              .toList();
+        }
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -44,27 +65,37 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
             child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-              FormInput(
-                formFields: const [
-                  TextInput(inputName: "phone", inputType: "phone"),
-                  TextInput(inputName: "time", inputType: "time"),
-                  TextInput(inputName: "date", inputType: "date"),
-                  TextInput(inputName: "email", inputType: "email"),
-                  CheckboxInput(checkboxName: "checkbox"),
-                  DropdownInput(
-                      dropdownName: "dropdown",
-                      dropdownOptions: ["test1", "test2", "test3", "test4"]),
-                ],
-                context: context,
-              ),
-              const ButtonGroup(buttons: [
-                SecondaryButton(buttonName: "test"),
-                PrimaryButton(buttonName: "primaryy")
-              ]),
-              FormOutput(testForm: TestForm(phone: "79451263", time: "22:55", date: "25/02/2000", email: "alexj.bartolo@gmail.com", checkbox: "true", dropdownValue: "buq"))
-            ]))));
+                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+          FormInput(
+              formFields: [
+                TextInput(inputName: "phone", inputType: "phone", inputIcon: const Icon(Icons.phone)),
+                TextInput(inputName: "time", inputType: "time", inputIcon: const Icon(Icons.access_time)),
+                TextInput(inputName: "date", inputType: "date", inputIcon: const Icon(Icons.calendar_month)),
+                TextInput(inputName: "email", inputType: "email", inputIcon: const Icon(Icons.email_outlined)),
+                CheckboxInput(checkboxName: "checkbox"),
+                DropdownInput(
+                    dropdownName: "dropdown",
+                    dropdownOptions: const ["test1", "test2", "test3", "test4"],
+                    dropdownIcon: const Icon(Icons.water_drop_outlined)),
+                RadioInput(
+                  radioOptions: const ["radioOption 1", "radioOption 2"],
+                  radioIcons: const [Icon(Icons.dangerous), Icon(Icons.face)],
+                  defaultRadioOption: "radioOption 2",
+                )
+              ],
+              buttons: ButtonGroup(buttons: [
+                SecondaryButton(
+                  buttonName: "test",
+                  buttonAction: (BuildContext) => print("hello"),
+                ),
+                PrimaryButton(
+                  buttonName: "primaryyww",
+                  buttonAction: (BuildContext) {
+                    print("hello2");
+                  },
+                )
+              ])),
+          for (var test in storedData) FormOutput(testForm: test)
+        ]))));
   }
 }

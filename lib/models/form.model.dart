@@ -1,25 +1,35 @@
-class TestForm {
-  String phone;
-  String time;
-  String date;
-  String email;
-  String checkbox;
-  String dropdownValue;
+import 'dart:convert';
 
-  TestForm(
-      {required this.phone,
-      required this.time,
-      required this.date,
-      required this.email,
-      required this.checkbox,
-      required this.dropdownValue});
+class FormData {
+  final List<String> keys;
+  late Map<String, dynamic> data;
 
-  Map<String, String> toJson() => {
-        "phone": phone,
-        "time": time,
-        "date": date,
-        "email": email,
-        "checkbox": checkbox,
-        "dropdownValue": dropdownValue,
-      };
+  FormData.empty({required this.keys}) {
+    data = {};
+  }
+
+  FormData.from({required Map<String, dynamic> newData, required this.keys}) {
+    bool validFlag = true;
+
+    newData.keys.forEach((key) {
+      if (!keys.contains(key)) validFlag = false;
+    });
+
+    if (validFlag) data = newData;
+  }
+
+  set update(Map<String, dynamic> newDataEntries) {
+    newDataEntries.forEach((key, value) {
+      if (keys.contains(key)) {
+        data[key] = value;
+      }
+    });
+  }
+
+  Map<String, dynamic> get getData => data;
+
+  @override
+  String toString() => json.encode(data);
 }
+
+List<String> testData = ["phone", "time", "date", "email", "checkbox", "dropdown", "radio"];

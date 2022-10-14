@@ -11,9 +11,9 @@ class FormData {
   FormData.from({required Map<String, dynamic> newData, required this.keys}) {
     bool validFlag = true;
 
-    newData.keys.forEach((key) {
+    for (var key in newData.keys) {
       if (!keys.contains(key)) validFlag = false;
-    });
+    }
 
     if (validFlag) data = newData;
   }

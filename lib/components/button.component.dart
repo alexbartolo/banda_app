@@ -4,7 +4,7 @@ import 'package:banda_app/utils/button.utils.dart';
 
 abstract class Button extends StatelessWidget {
   final String buttonName;
-  final Function(BuildContext) buttonAction;
+  final void Function(BuildContext) buttonAction;
 
   const Button({super.key, required this.buttonAction, required this.buttonName});
 

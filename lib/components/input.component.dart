@@ -25,7 +25,7 @@ class TextInput extends StatelessWidget with Input {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Expanded(
         child: TextFormField(
           decoration: InputDecoration(
@@ -117,7 +117,7 @@ class _DropdownInputState extends State<DropdownInput> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 62,
+      // height: 62,
       child: DropdownButtonFormField(
         borderRadius: BorderRadius.circular(20),
         decoration: InputDecoration(
@@ -147,7 +147,7 @@ class RadioInput extends StatefulWidget with Input {
   final List<String> radioOptions;
   final List<Icon> radioIcons;
 
-  String? defaultRadioOption;
+  late final String? defaultRadioOption;
 
   RadioInput({super.key, required this.radioOptions, required this.radioIcons, this.defaultRadioOption}) {
     defaultRadioOption ??= radioOptions[0];
@@ -234,13 +234,15 @@ class FormInput extends StatelessWidget {
   late final FormData data;
 
   late final List formFields;
-  late ButtonGroup buttons;
+  late final ButtonGroup buttons;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   FormInput({super.key, required this.formFields, required this.buttons}) {
     data = FormData.empty(keys: testData);
-    formFields.forEach((formField) => formField.update = data);
+    for (var formField in formFields) {
+      formField.update = data;
+    }
   }
 
   set updateFormFields(List updatedFormFields) {

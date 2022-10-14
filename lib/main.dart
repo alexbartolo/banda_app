@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:banda_app/models/form.model.dart';
+import 'package:banda_app/utils/button.utils.dart';
 import 'package:flutter/material.dart';
 import 'package:banda_app/components/button.component.dart';
 import 'package:banda_app/components/input.component.dart';
@@ -83,16 +84,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   defaultRadioOption: "radioOption 2",
                 )
               ],
-              buttons: ButtonGroup(buttons: [
+              buttons: const ButtonGroup(buttons: [
                 SecondaryButton(
                   buttonName: "test",
-                  buttonAction: (BuildContext) => print("hello"),
+                  buttonAction: checkContext,
                 ),
                 PrimaryButton(
                   buttonName: "primaryyww",
-                  buttonAction: (BuildContext) {
-                    print("hello2");
-                  },
+                  buttonAction: checkContext,
                 )
               ])),
           for (var test in storedData) FormOutput(testForm: test)

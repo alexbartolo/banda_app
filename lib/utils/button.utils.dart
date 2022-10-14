@@ -12,3 +12,7 @@ Future dateButtonAction(BuildContext context) async {
 Future timeButtonAction(BuildContext context) async {
   return (await showTimePicker(context: context, initialTime: TimeOfDay.now()))?.format(context) as String;
 }
+
+void checkContext(BuildContext context) {
+  print(context);
+}

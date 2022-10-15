@@ -18,14 +18,15 @@ class TextInputInformation {
   final TextInputType textInputType;
   TextInputFormatter? textEditingFormatter;
   TextCapitalization? textCapitalization;
-  final String? Function(String?)? validator;
+  final String? Function(String?) validator;
 
   TextInputInformation.number(
       {required this.textInputType, required this.textEditingFormatter, required this.validator}) {
     textCapitalization = TextCapitalization.none;
   }
 
-  TextInputInformation.string({required this.textInputType, required this.textCapitalization, this.validator}) {
+  TextInputInformation.string(
+      {required this.textInputType, required this.textCapitalization, required this.validator}) {
     textEditingFormatter = MaskTextInputFormatter();
   }
 }
@@ -45,7 +46,8 @@ Map<String, TextInputInformation> textInputInformationTypes = {
       validator: validatePhone),
   "email": TextInputInformation.string(
       textInputType: TextInputType.emailAddress, textCapitalization: TextCapitalization.none, validator: validateEmail),
-  "name": TextInputInformation.string(textInputType: TextInputType.name, textCapitalization: TextCapitalization.words),
-  "normal":
-      TextInputInformation.string(textInputType: TextInputType.text, textCapitalization: TextCapitalization.sentences)
+  "name": TextInputInformation.string(
+      textInputType: TextInputType.name, textCapitalization: TextCapitalization.words, validator: validateName),
+  "text": TextInputInformation.string(
+      textInputType: TextInputType.text, textCapitalization: TextCapitalization.sentences, validator: validateText)
 };

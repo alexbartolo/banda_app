@@ -47,4 +47,12 @@ String? validateDropdown(String? dropdownOption) {
   return dropdownOption == null ? "Dropdown cannot be empty" : null;
 }
 
+String? validateName(String? name) {
+  return name!.isEmpty ? "Name cannot be blank." : null;
+}
+
+String? validateText(String? text) {
+  return text!.isEmpty ? "This field cannot be empty." : null;
+}
+
 //https://stackoverflow.com/questions/54925779/textformfield-validator-not-working-the-method-validate-was-called-on-null

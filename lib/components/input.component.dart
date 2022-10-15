@@ -20,8 +20,13 @@ class TextInput extends StatelessWidget with Input {
   final String inputName;
   final String inputType;
   final Icon? inputIcon;
+  late final TextEditingController _textEditingController;
+  late final TextInputInformation _textInputInformation;
 
-  TextInput({super.key, required this.inputName, required this.inputType, this.inputIcon});
+  TextInput({super.key, required this.inputName, required this.inputType, this.inputIcon}) {
+    _textEditingController = TextEditingController();
+    _textInputInformation = textInputInformationTypes[inputType] as TextInputInformation;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,23 +43,18 @@ class TextInput extends StatelessWidget with Input {
               borderRadius: BorderRadius.circular(20),
             ),
           ),
-          controller: textInputInformationTypes[inputType]?.textEditingController,
-          keyboardType: textInputInformationTypes[inputType]?.textInputType,
-          textCapitalization: textInputInformationTypes[inputType]?.textCapitalization as TextCapitalization,
-          inputFormatters: [textInputInformationTypes[inputType]?.textEditingFormatter as TextInputFormatter],
-          validator: textInputInformationTypes[inputType]?.validator,
+          controller: _textEditingController,
+          keyboardType: _textInputInformation.textInputType,
+          textCapitalization: _textInputInformation.textCapitalization as TextCapitalization,
+          inputFormatters: [_textInputInformation.textEditingFormatter as TextInputFormatter],
+          validator: _textInputInformation.validator,
           onSaved: (newValue) {
             data.update = {inputName: newValue};
           },
         ),
       ),
-      if (inputType == "date")
-        DateButton(
-            textEditingController:
-                textInputInformationTypes[inputType]?.textEditingController as TextEditingController),
-      if (inputType == "time")
-        TimeButton(
-            textEditingController: textInputInformationTypes[inputType]?.textEditingController as TextEditingController)
+      if (inputType == "date") DateButton(textEditingController: _textEditingController),
+      if (inputType == "time") TimeButton(textEditingController: _textEditingController)
     ]);
   }
 }
@@ -252,10 +252,12 @@ class FormInput extends StatelessWidget {
   void validateAndSave() {
     final FormState? form = _formKey.currentState;
 
-    if (form!.validate()) form.save();
-    storedData.add(data);
+    if (form!.validate()) {
+      form.save();
+      storedData.add(data);
 
-    storage.write(json.encode(storedData.toString()), "test");
+      storage.write(json.encode(storedData.toString()), "test");
+    }
   }
 
   @override

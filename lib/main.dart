@@ -69,6 +69,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           FormInput(
               formFields: [
+                TextInput(inputName: "name", inputType: "name", inputIcon: const Icon(Icons.face)),
+                TextInput(inputName: "name2", inputType: "name", inputIcon: const Icon(Icons.face)),
                 TextInput(inputName: "phone", inputType: "phone", inputIcon: const Icon(Icons.phone)),
                 TextInput(inputName: "time", inputType: "time", inputIcon: const Icon(Icons.access_time)),
                 TextInput(inputName: "date", inputType: "date", inputIcon: const Icon(Icons.calendar_month)),
@@ -84,14 +86,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   defaultRadioOption: "radioOption 2",
                 )
               ],
-              buttons: const ButtonGroup(buttons: [
-                SecondaryButton(
+              buttons: ButtonGroup(buttons: [
+                const SecondaryButton(
                   buttonName: "test",
                   buttonAction: checkContext,
                 ),
                 PrimaryButton(
                   buttonName: "primaryyww",
-                  buttonAction: checkContext,
+                  buttonAction: (context) => checkContext(context),
                 )
               ])),
           for (var test in storedData) FormOutput(testForm: test)

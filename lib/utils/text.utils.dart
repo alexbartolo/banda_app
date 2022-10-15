@@ -18,20 +18,14 @@ class TextInputInformation {
   final TextInputType textInputType;
   TextInputFormatter? textEditingFormatter;
   TextCapitalization? textCapitalization;
-  TextEditingController textEditingController = TextEditingController();
   final String? Function(String?)? validator;
 
   TextInputInformation.number(
-      {required this.textInputType,
-      required this.textEditingFormatter,
-      required this.validator}) {
+      {required this.textInputType, required this.textEditingFormatter, required this.validator}) {
     textCapitalization = TextCapitalization.none;
   }
 
-  TextInputInformation.string(
-      {required this.textInputType,
-      required this.textCapitalization,
-      this.validator}) {
+  TextInputInformation.string({required this.textInputType, required this.textCapitalization, this.validator}) {
     textEditingFormatter = MaskTextInputFormatter();
   }
 }
@@ -39,27 +33,19 @@ class TextInputInformation {
 Map<String, TextInputInformation> textInputInformationTypes = {
   "date": TextInputInformation.number(
       textInputType: TextInputType.datetime,
-      textEditingFormatter: MaskTextInputFormatter(
-          mask: "##/##/####", filter: {"#": RegExp(r'[0-9]')}),
+      textEditingFormatter: MaskTextInputFormatter(mask: "##/##/####", filter: {"#": RegExp(r'[0-9]')}),
       validator: validateDate),
   "time": TextInputInformation.number(
       textInputType: TextInputType.datetime,
-      textEditingFormatter: MaskTextInputFormatter(
-          mask: "##:##", filter: {"#": RegExp(r'[0-9]')}),
+      textEditingFormatter: MaskTextInputFormatter(mask: "##:##", filter: {"#": RegExp(r'[0-9]')}),
       validator: validateTime),
   "phone": TextInputInformation.number(
       textInputType: TextInputType.phone,
-      textEditingFormatter: MaskTextInputFormatter(
-          mask: "########", filter: {"#": RegExp(r'[0-9]')}),
+      textEditingFormatter: MaskTextInputFormatter(mask: "########", filter: {"#": RegExp(r'[0-9]')}),
       validator: validatePhone),
   "email": TextInputInformation.string(
-      textInputType: TextInputType.emailAddress,
-      textCapitalization: TextCapitalization.none,
-      validator: validateEmail),
-  "name": TextInputInformation.string(
-      textInputType: TextInputType.name,
-      textCapitalization: TextCapitalization.words),
-  "normal": TextInputInformation.string(
-      textInputType: TextInputType.text,
-      textCapitalization: TextCapitalization.sentences)
+      textInputType: TextInputType.emailAddress, textCapitalization: TextCapitalization.none, validator: validateEmail),
+  "name": TextInputInformation.string(textInputType: TextInputType.name, textCapitalization: TextCapitalization.words),
+  "normal":
+      TextInputInformation.string(textInputType: TextInputType.text, textCapitalization: TextCapitalization.sentences)
 };

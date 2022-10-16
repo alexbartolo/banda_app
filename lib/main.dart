@@ -70,16 +70,17 @@ class _MyHomePageState extends State<MyHomePage> {
           FormInput(
               formFields: [
                 TextInput(inputName: "name", inputType: "name", inputIcon: const Icon(Icons.face)),
-                TextInput(inputName: "name2", inputType: "name", inputIcon: const Icon(Icons.face)),
+                TextInput(inputName: "text", inputType: "text", inputIcon: const Icon(Icons.text_fields)),
                 TextInput(inputName: "phone", inputType: "phone", inputIcon: const Icon(Icons.phone)),
                 TextInput(inputName: "time", inputType: "time", inputIcon: const Icon(Icons.access_time)),
                 TextInput(inputName: "date", inputType: "date", inputIcon: const Icon(Icons.calendar_month)),
                 TextInput(inputName: "email", inputType: "email", inputIcon: const Icon(Icons.email_outlined)),
                 CheckboxInput(checkboxName: "checkbox"),
                 DropdownInput(
-                    dropdownName: "dropdown",
-                    dropdownOptions: const ["test1", "test2", "test3", "test4"],
-                    dropdownIcon: const Icon(Icons.water_drop_outlined)),
+                  dropdownName: "dropdown",
+                  dropdownOptions: const ["test1", "test2", "test3", "test4"],
+                  dropdownIcon: const Icon(Icons.water_drop_outlined),
+                ),
                 RadioInput(
                   radioOptions: const ["radioOption 1", "radioOption 2"],
                   radioIcons: const [Icon(Icons.dangerous), Icon(Icons.face)],

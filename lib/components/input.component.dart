@@ -175,7 +175,6 @@ class _RadioInputState extends State<RadioInput> {
 
   @override
   Widget build(BuildContext context) {
-    chosenRadioValue = widget.defaultRadioOption!;
     return Column(
       children: [
         for (int i = 0; i < widget.radioOptions.length; i++) ...{

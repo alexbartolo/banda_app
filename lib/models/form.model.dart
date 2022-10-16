@@ -32,4 +32,4 @@ class FormData {
   String toString() => json.encode(data);
 }
 
-List<String> testData = ["phone", "time", "date", "email", "checkbox", "dropdown", "radio"];
+List<String> testData = ["name", "text", "phone", "time", "date", "email", "checkbox", "dropdown", "radio"];

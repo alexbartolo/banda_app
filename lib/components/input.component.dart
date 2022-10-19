@@ -60,9 +60,10 @@ class TextInput extends StatelessWidget with Input {
 }
 
 class CheckboxInput extends StatefulWidget with Input {
+  static final GlobalKey<_CheckboxInputState> _key = GlobalKey<_CheckboxInputState>();
   final String checkboxName;
 
-  CheckboxInput({super.key, required this.checkboxName});
+  CheckboxInput({required this.checkboxName}) : super(key: _key);
 
   @override
   State<CheckboxInput> createState() => _CheckboxInputState();
@@ -70,6 +71,10 @@ class CheckboxInput extends StatefulWidget with Input {
 
 class _CheckboxInputState extends State<CheckboxInput> {
   bool _value = false;
+
+  void reset() {
+    setState(() => _value = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +114,6 @@ class DropdownInput extends StatefulWidget with Input {
 }
 
 class _DropdownInputState extends State<DropdownInput> {
-  String? _selectedDropdownOption;
   // FocusNode? node;
 
   //TODO: Check how to move items below field, and how to unfocus in case of pressing somewhere else other than item list
@@ -132,11 +136,10 @@ class _DropdownInputState extends State<DropdownInput> {
         items: widget.dropdownOptions
             .map((String option) => DropdownMenuItem(value: option, child: Text(option)))
             .toList(),
-        onChanged: (value) => setState(() => (value as String).isNotEmpty ? _selectedDropdownOption = value : null),
+        onChanged: (value) => {}, //required, but not needed
         onSaved: (newValue) => widget.data.update = {widget.dropdownName: newValue as String},
         validator: validateDropdown,
         alignment: Alignment.bottomCenter,
-        value: _selectedDropdownOption,
       ),
     );
   }
@@ -149,7 +152,9 @@ class RadioInput extends StatefulWidget with Input {
 
   late final String? defaultRadioOption;
 
-  RadioInput({super.key, required this.radioOptions, required this.radioIcons, this.defaultRadioOption}) {
+  static final GlobalKey<_RadioInputState> _key = GlobalKey();
+
+  RadioInput({required this.radioOptions, required this.radioIcons, this.defaultRadioOption}) : super(key: _key) {
     defaultRadioOption ??= radioOptions[0];
   }
 
@@ -159,6 +164,10 @@ class RadioInput extends StatefulWidget with Input {
 
 class _RadioInputState extends State<RadioInput> {
   String chosenRadioValue = "";
+
+  void reset() {
+    setState(() => chosenRadioValue = widget.defaultRadioOption as String);
+  }
 
   @override
   void initState() {
@@ -256,6 +265,17 @@ class FormInput extends StatelessWidget {
       storedData.add(data);
 
       storage.write(json.encode(storedData.toString()), "test");
+
+      form.reset();
+    }
+  }
+
+  void reset() {
+    final FormState? form = _formKey.currentState;
+    form!.reset();
+    for (var element in formFields) {
+      if (element is RadioInput) (element.key as GlobalKey<_RadioInputState>).currentState?.reset();
+      if (element is CheckboxInput) (element.key as GlobalKey<_CheckboxInputState>).currentState?.reset();
     }
   }
 
@@ -271,6 +291,13 @@ class FormInput extends StatelessWidget {
             onPressed: validateAndSave,
             child: const Text(
               'Login',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ),
+          TextButton(
+            onPressed: reset,
+            child: const Text(
+              'Reset',
               style: TextStyle(fontSize: 20.0),
             ),
           ),

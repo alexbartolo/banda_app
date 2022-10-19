@@ -11,7 +11,7 @@ import 'utils/global.utils.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
@@ -61,43 +61,53 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FormInput(
+                formFields: [
+                  TextInput(inputName: "name", inputType: "name", inputIcon: const Icon(Icons.face)),
+                  TextInput(inputName: "text", inputType: "text", inputIcon: const Icon(Icons.text_fields)),
+                  TextInput(inputName: "phone", inputType: "phone", inputIcon: const Icon(Icons.phone)),
+                  TextInput(inputName: "time", inputType: "time", inputIcon: const Icon(Icons.access_time)),
+                  TextInput(inputName: "date", inputType: "date", inputIcon: const Icon(Icons.calendar_month)),
+                  TextInput(inputName: "email", inputType: "email", inputIcon: const Icon(Icons.email_outlined)),
+                  CheckboxInput(checkboxName: "checkbox"),
+                  DropdownInput(
+                    dropdownName: "dropdown",
+                    dropdownOptions: const ["test1", "test2", "test3", "test4"],
+                    dropdownIcon: const Icon(Icons.water_drop_outlined),
+                  ),
+                  RadioInput(
+                    // key: _key,
+                    radioOptions: const ["radioOption 1", "radioOption 2"],
+                    radioIcons: const [Icon(Icons.dangerous), Icon(Icons.face)],
+                    defaultRadioOption: "radioOption 2",
+                  )
+                ],
+                buttons: ButtonGroup(
+                  buttons: [
+                    const SecondaryButton(
+                      buttonName: "test",
+                      buttonAction: checkContext,
+                    ),
+                    PrimaryButton(
+                      buttonName: "primaryyww",
+                      buttonAction: (context) => checkContext(context),
+                    )
+                  ],
+                ),
+              ),
+              for (var test in storedData) FormOutput(testForm: test)
+            ],
+          ),
         ),
-        body: Center(
-            child: SingleChildScrollView(
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          FormInput(
-              formFields: [
-                TextInput(inputName: "name", inputType: "name", inputIcon: const Icon(Icons.face)),
-                TextInput(inputName: "text", inputType: "text", inputIcon: const Icon(Icons.text_fields)),
-                TextInput(inputName: "phone", inputType: "phone", inputIcon: const Icon(Icons.phone)),
-                TextInput(inputName: "time", inputType: "time", inputIcon: const Icon(Icons.access_time)),
-                TextInput(inputName: "date", inputType: "date", inputIcon: const Icon(Icons.calendar_month)),
-                TextInput(inputName: "email", inputType: "email", inputIcon: const Icon(Icons.email_outlined)),
-                CheckboxInput(checkboxName: "checkbox"),
-                DropdownInput(
-                  dropdownName: "dropdown",
-                  dropdownOptions: const ["test1", "test2", "test3", "test4"],
-                  dropdownIcon: const Icon(Icons.water_drop_outlined),
-                ),
-                RadioInput(
-                  radioOptions: const ["radioOption 1", "radioOption 2"],
-                  radioIcons: const [Icon(Icons.dangerous), Icon(Icons.face)],
-                  defaultRadioOption: "radioOption 2",
-                )
-              ],
-              buttons: ButtonGroup(buttons: [
-                const SecondaryButton(
-                  buttonName: "test",
-                  buttonAction: checkContext,
-                ),
-                PrimaryButton(
-                  buttonName: "primaryyww",
-                  buttonAction: (context) => checkContext(context),
-                )
-              ])),
-          for (var test in storedData) FormOutput(testForm: test)
-        ]))));
+      ),
+    );
   }
 }

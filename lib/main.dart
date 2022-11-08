@@ -84,7 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     dropdownIcon: const Icon(Icons.water_drop_outlined),
                   ),
                   RadioInput(
-                    // key: _key,
                     radioOptions: const ["radioOption 1", "radioOption 2"],
                     radioIcons: const [Icon(Icons.dangerous), Icon(Icons.face)],
                     defaultRadioOption: "radioOption 2",
@@ -92,13 +91,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
                 buttons: ButtonGroup(
                   buttons: [
-                    const SecondaryButton(
-                      buttonName: "test",
-                      buttonAction: checkContext,
+                    SecondaryButton(
+                      buttonName: "Modal",
+                      buttonType: ButtonType.openModalScreen,
+                      buttonActionParameters: {"screen": FormOutput(testForm: storedData[0])}
                     ),
                     PrimaryButton(
-                      buttonName: "primaryyww",
-                      buttonAction: (context) => checkContext(context),
+                      buttonName: "Adjust",
+                      buttonType: ButtonType.adjust,
                     )
                   ],
                 ),

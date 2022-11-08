@@ -1,12 +1,20 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:banda_app/components/output.component.dart';
 import 'package:banda_app/utils/button.utils.dart';
 
 abstract class Button extends StatelessWidget {
   final String buttonName;
-  final void Function(BuildContext) buttonAction;
+  final ButtonType buttonType;
+  late Function()? buttonAction = () {};
+  Map<String, dynamic>? buttonActionParameters;
 
-  const Button({super.key, required this.buttonAction, required this.buttonName});
+  set addFunction(Function() action) => buttonAction = action;
+
+  void addParameters(Map<String, dynamic> parameters) => buttonActionParameters?.addAll(parameters);
+
+  Button({super.key, required this.buttonName, required this.buttonType, this.buttonActionParameters});
 
   Widget buttonDesign(BuildContext context);
 
@@ -17,12 +25,12 @@ abstract class Button extends StatelessWidget {
 }
 
 class PrimaryButton extends Button {
-  const PrimaryButton({super.key, required super.buttonAction, required super.buttonName});
+  PrimaryButton({super.key, required super.buttonName, required super.buttonType, super.buttonActionParameters});
 
   @override
   Widget buttonDesign(BuildContext context) {
     return ElevatedButton(
-        onPressed: () => buttonAction(context),
+        onPressed: buttonAction,
         style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blue,
             foregroundColor: Colors.white,
@@ -33,12 +41,12 @@ class PrimaryButton extends Button {
 }
 
 class SecondaryButton extends Button {
-  const SecondaryButton({super.key, required super.buttonAction, required super.buttonName});
+  SecondaryButton({super.key,required super.buttonName, required super.buttonType, super.buttonActionParameters});
 
   @override
   Widget buttonDesign(BuildContext context) {
     return OutlinedButton(
-        onPressed: () => super.buttonAction(context),
+        onPressed: buttonAction,
         style: OutlinedButton.styleFrom(
             side: const BorderSide(color: Colors.blue), padding: const EdgeInsets.only(left: 24, right: 24)),
         child: TextOutput(textOutputBody: buttonName, textOutputStyle: "Button"));

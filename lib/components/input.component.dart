@@ -1,14 +1,12 @@
-import 'dart:convert';
-
-import 'package:banda_app/models/form.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:banda_app/components/output.component.dart';
 import 'package:banda_app/components/button.component.dart';
+import 'package:banda_app/models/form.model.dart';
+import 'package:banda_app/utils/button.utils.dart';
 import 'package:banda_app/utils/text.utils.dart';
-
-import '../utils/global.utils.dart';
-import '../utils/validations.utils.dart';
+import 'package:banda_app/utils/validations.utils.dart';
 
 class Input {
   late final FormData data;
@@ -60,16 +58,16 @@ class TextInput extends StatelessWidget with Input {
 }
 
 class CheckboxInput extends StatefulWidget with Input {
-  static final GlobalKey<_CheckboxInputState> _key = GlobalKey<_CheckboxInputState>();
+  static final GlobalKey<CheckboxInputState> _key = GlobalKey<CheckboxInputState>();
   final String checkboxName;
 
   CheckboxInput({required this.checkboxName}) : super(key: _key);
 
   @override
-  State<CheckboxInput> createState() => _CheckboxInputState();
+  State<CheckboxInput> createState() => CheckboxInputState();
 }
 
-class _CheckboxInputState extends State<CheckboxInput> {
+class CheckboxInputState extends State<CheckboxInput> {
   bool _value = false;
 
   void reset() {
@@ -152,17 +150,17 @@ class RadioInput extends StatefulWidget with Input {
 
   late final String? defaultRadioOption;
 
-  static final GlobalKey<_RadioInputState> _key = GlobalKey();
+  static final GlobalKey<RadioInputState> _key = GlobalKey();
 
   RadioInput({required this.radioOptions, required this.radioIcons, this.defaultRadioOption}) : super(key: _key) {
     defaultRadioOption ??= radioOptions[0];
   }
 
   @override
-  State<RadioInput> createState() => _RadioInputState();
+  State<RadioInput> createState() => RadioInputState();
 }
 
-class _RadioInputState extends State<RadioInput> {
+class RadioInputState extends State<RadioInput> {
   String chosenRadioValue = "";
 
   void reset() {
@@ -214,10 +212,10 @@ class RadioOption extends StatefulWidget {
       required this.updateRadio});
 
   @override
-  State<RadioOption> createState() => _RadioOptionState();
+  State<RadioOption> createState() => RadioOptionState();
 }
 
-class _RadioOptionState extends State<RadioOption> {
+class RadioOptionState extends State<RadioOption> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -257,50 +255,26 @@ class FormInput extends StatelessWidget {
     formFields = updatedFormFields;
   }
 
-  void validateAndSave() {
-    final FormState? form = _formKey.currentState;
-
-    if (form!.validate()) {
-      form.save();
-      storedData.add(data);
-
-      storage.write(json.encode(storedData.toString()), "test");
-
-      form.reset();
+  void addFunctions(BuildContext context) {
+    for (Button button in buttons.buttons) {
+      button.addParameters({"context": context, "formKey": _formKey, "formFields": formFields, "data": data});
+      button.addFunction = () => buttonFunctions[button.buttonType]!(button.buttonActionParameters);
     }
   }
 
-  void reset() {
-    final FormState? form = _formKey.currentState;
-    form!.reset();
-    for (var element in formFields) {
-      if (element is RadioInput) (element.key as GlobalKey<_RadioInputState>).currentState?.reset();
-      if (element is CheckboxInput) (element.key as GlobalKey<_CheckboxInputState>).currentState?.reset();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    addFunctions(context);
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (var formField in formFields) ...{formField, const SizedBox(height: 12)},
-          TextButton(
-            onPressed: validateAndSave,
-            child: const Text(
-              'Login',
-              style: TextStyle(fontSize: 20.0),
-            ),
-          ),
-          TextButton(
-            onPressed: reset,
-            child: const Text(
-              'Reset',
-              style: TextStyle(fontSize: 20.0),
-            ),
-          ),
+          for (var formField in formFields) ...{
+            formField,
+            const SizedBox(height: 12)
+          },
           buttons
         ],
       ),

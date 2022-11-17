@@ -245,7 +245,7 @@ class FormInput extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   FormInput({super.key, required this.formFields, required this.buttons}) {
-    data = FormData.empty(keys: testData);
+    data = FormData.empty(keys: testData, type: 'test');
     for (var formField in formFields) {
       formField.update = data;
     }

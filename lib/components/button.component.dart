@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:banda_app/components/output.component.dart';
 import 'package:banda_app/utils/button.utils.dart';
@@ -8,13 +6,15 @@ abstract class Button extends StatelessWidget {
   final String buttonName;
   final ButtonType buttonType;
   late Function()? buttonAction = () {};
-  Map<String, dynamic>? buttonActionParameters;
+  late Map<String, dynamic> buttonActionParameters;
 
   set addFunction(Function() action) => buttonAction = action;
 
-  void addParameters(Map<String, dynamic> parameters) => buttonActionParameters?.addAll(parameters);
+  void addParameters(Map<String, dynamic> parameters) => buttonActionParameters.addAll(parameters);
 
-  Button({super.key, required this.buttonName, required this.buttonType, this.buttonActionParameters});
+  Button({super.key, required this.buttonName, required this.buttonType, buttonActionParameters}) {
+    this.buttonActionParameters = buttonActionParameters ?? {};
+  }
 
   Widget buttonDesign(BuildContext context);
 

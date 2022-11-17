@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:banda_app/models/form.model.dart';
 import 'package:banda_app/utils/button.utils.dart';
+import 'package:banda_app/utils/file.utils.dart';
 import 'package:flutter/material.dart';
 import 'package:banda_app/components/button.component.dart';
 import 'package:banda_app/components/input.component.dart';
@@ -38,24 +39,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // bool success = false;
   @override
   void initState() {
     super.initState();
-    storage.read("test").then((value) {
-      setState(() {
-        if (value != "[]") {
-          storedData = json
-              .decode(json.decode(value))
-              .map<FormData>(
-                (testValue) => FormData.from(
-                  newData: testValue,
-                  keys: testData,
-                ),
-              )
-              .toList();
-        }
-      });
-    });
+
+    storage.read("test").then((value) => setState(() =>
+        storage.add = value));
+    // setState;
+
+    // .then((value) {
+    //   setState(() {
+    //     // if (value != "[]") {
+    //       data["test"] = value
+    //           // json.decode(json.decode(value))
+    //           .map<FormData>(
+    //             (testValue) => FormData.from(type: 'test',
+    //               newData: testValue,
+    //               keys: testData,
+    //             ),
+    //           )
+    //           .toList();
+    //     // }
+    //   });
+    // });
   }
 
   @override
@@ -71,12 +78,30 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               FormInput(
                 formFields: [
-                  TextInput(inputName: "name", inputType: "name", inputIcon: const Icon(Icons.face)),
-                  TextInput(inputName: "text", inputType: "text", inputIcon: const Icon(Icons.text_fields)),
-                  TextInput(inputName: "phone", inputType: "phone", inputIcon: const Icon(Icons.phone)),
-                  TextInput(inputName: "time", inputType: "time", inputIcon: const Icon(Icons.access_time)),
-                  TextInput(inputName: "date", inputType: "date", inputIcon: const Icon(Icons.calendar_month)),
-                  TextInput(inputName: "email", inputType: "email", inputIcon: const Icon(Icons.email_outlined)),
+                  TextInput(
+                      inputName: "name",
+                      inputType: "name",
+                      inputIcon: const Icon(Icons.face)),
+                  TextInput(
+                      inputName: "text",
+                      inputType: "text",
+                      inputIcon: const Icon(Icons.text_fields)),
+                  TextInput(
+                      inputName: "phone",
+                      inputType: "phone",
+                      inputIcon: const Icon(Icons.phone)),
+                  TextInput(
+                      inputName: "time",
+                      inputType: "time",
+                      inputIcon: const Icon(Icons.access_time)),
+                  TextInput(
+                      inputName: "date",
+                      inputType: "date",
+                      inputIcon: const Icon(Icons.calendar_month)),
+                  TextInput(
+                      inputName: "email",
+                      inputType: "email",
+                      inputIcon: const Icon(Icons.email_outlined)),
                   CheckboxInput(checkboxName: "checkbox"),
                   DropdownInput(
                     dropdownName: "dropdown",
@@ -92,18 +117,27 @@ class _MyHomePageState extends State<MyHomePage> {
                 buttons: ButtonGroup(
                   buttons: [
                     SecondaryButton(
-                      buttonName: "Modal",
-                      buttonType: ButtonType.openModalScreen,
-                      buttonActionParameters: {"screen": FormOutput(testForm: storedData[0])}
-                    ),
+                        buttonName: "Modal",
+                        buttonType: ButtonType.openModalScreen,
+                        buttonActionParameters: {
+                          "screen": FormOutput(
+                              testForm: storage.getElement('test') != -1
+                                  ? storage.data[storage.getElement('test')]
+                                          .data.isNotEmpty
+                                      ? storage.data[storage.getElement('test')]
+                                          .data.first
+                                      : FormData.empty(
+                                          type: "test", keys: testData)
+                                  : FormData.empty(
+                                      type: "test", keys: testData)) as dynamic
+                        }),
                     PrimaryButton(
-                      buttonName: "Adjust",
-                      buttonType: ButtonType.adjust,
+                      buttonName: "Save",
+                      buttonType: ButtonType.save,
                     )
                   ],
                 ),
-              ),
-              for (var test in storedData) FormOutput(testForm: test)
+              )
             ],
           ),
         ),

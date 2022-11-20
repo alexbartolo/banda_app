@@ -3,6 +3,18 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:banda_app/models/form.model.dart';
 
+Future<String> get _localPath async {
+  final directory = await getApplicationDocumentsDirectory();
+
+  return directory.path;
+}
+
+Future<File> _localFile(String fileName) async {
+  final path = await _localPath;
+
+  return File('$path/$fileName.obj');
+}
+
 class DataEntry {
   late String type;
   late List<String> keys;
@@ -14,11 +26,7 @@ class DataEntry {
     required this.data,
   });
 
-  DataEntry.fromMap({required Map test}) {
-    type = test["type"];
-    keys = test['keys'] as List<String>;
-    data = test['data'] as List<FormData>;
-  }
+  DataEntry.empty();
 
   @override
   String toString() {
@@ -27,70 +35,38 @@ class DataEntry {
 }
 
 class Storage {
-  // Map<String, List<FormData>> data = {};
-  List<DataEntry> data = <DataEntry>[];
+  List<DataEntry> dataEntries = <DataEntry>[];
 
-  int getElement(String type) =>
-      data.indexWhere((element) => element.type == type);
+  int getEntryIndex(String type) => dataEntries.indexWhere((element) => element.type == type);
 
-  void update(FormData newData) {
-    if (getElement(newData.type) != -1) {
-      data[getElement(newData.type)].data.add(newData);
-    } else {
-      data.add(
-          DataEntry(type: newData.type, keys: newData.keys, data: [newData]));
-    }
-    // data.update(newData.type, ((previous) {
-    //   previous.add(newData);
-    //   return previous;
-    // }), ifAbsent: (() => {newData}.toList()));
+  set addNewEntry(DataEntry test) => dataEntries.add(test);
+
+  void updateEntry(FormData newData) {
+    var element = getEntryIndex(newData.type);
+
+    element != -1
+        ? dataEntries[element].data.add(newData)
+        : addNewEntry = DataEntry(type: newData.type, keys: newData.keys, data: [newData]);
 
     write(newData.type);
-  }
-
-  set add(DataEntry test) => data.add(test);
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> _localFile(String fileName) async {
-    final path = await _localPath;
-
-    return File('$path/$fileName.obj');
   }
 
   Future<File> write(String fileName) async {
     final file = await _localFile(fileName);
 
-    return file
-        .writeAsBytes(utf8.encode(data[getElement(fileName)].toString()));
+    return file.writeAsBytes(utf8.encode(dataEntries[getEntryIndex(fileName)].toString()));
   }
 
-  Future<dynamic> read(String fileName) async {
+  Future<DataEntry> read(String fileName) async {
     try {
       final file = await _localFile(fileName);
       String fileContent = utf8.decode(await file.readAsBytes());
 
       Map filess = json.decode(fileContent);
-      // data[fileName]
-
-      // return filess.map<DataEntry>((value) => DataEntry(type: value, keys: keys, data: data));
-      // .map<FormData>(
-      //   (testValue) => FormData.from(
-      //     type: fileName,
-      //     newData: testValue,
-      //     keys: testData,
-      //   ),
-      // )
-      // .toList();
 
       return DataEntry(
           type: filess["type"],
-          keys:
-              (filess["keys"] as List).map<String>((e) => e as String).toList(),
+          keys: (filess["keys"] as List).map<String>((e) => e as String).toList(),
           data: (filess["data"] as List)
               .map<FormData>(
                 (e) => FormData.from(
@@ -101,8 +77,7 @@ class Storage {
               )
               .toList());
     } catch (error) {
-      // return false;
-      return [];
+      return DataEntry.empty();
     }
   }
 }

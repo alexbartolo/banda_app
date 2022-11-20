@@ -44,8 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    storage.read("test").then((value) => setState(() =>
-        storage.add = value));
+    storage.read("test").then((value) => setState(() => storage.addNewEntry = value));
     // setState;
 
     // .then((value) {
@@ -78,30 +77,12 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               FormInput(
                 formFields: [
-                  TextInput(
-                      inputName: "name",
-                      inputType: "name",
-                      inputIcon: const Icon(Icons.face)),
-                  TextInput(
-                      inputName: "text",
-                      inputType: "text",
-                      inputIcon: const Icon(Icons.text_fields)),
-                  TextInput(
-                      inputName: "phone",
-                      inputType: "phone",
-                      inputIcon: const Icon(Icons.phone)),
-                  TextInput(
-                      inputName: "time",
-                      inputType: "time",
-                      inputIcon: const Icon(Icons.access_time)),
-                  TextInput(
-                      inputName: "date",
-                      inputType: "date",
-                      inputIcon: const Icon(Icons.calendar_month)),
-                  TextInput(
-                      inputName: "email",
-                      inputType: "email",
-                      inputIcon: const Icon(Icons.email_outlined)),
+                  TextInput(inputName: "name", inputType: "name", inputIcon: const Icon(Icons.face)),
+                  TextInput(inputName: "text", inputType: "text", inputIcon: const Icon(Icons.text_fields)),
+                  TextInput(inputName: "phone", inputType: "phone", inputIcon: const Icon(Icons.phone)),
+                  TextInput(inputName: "time", inputType: "time", inputIcon: const Icon(Icons.access_time)),
+                  TextInput(inputName: "date", inputType: "date", inputIcon: const Icon(Icons.calendar_month)),
+                  TextInput(inputName: "email", inputType: "email", inputIcon: const Icon(Icons.email_outlined)),
                   CheckboxInput(checkboxName: "checkbox"),
                   DropdownInput(
                     dropdownName: "dropdown",
@@ -121,15 +102,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         buttonType: ButtonType.openModalScreen,
                         buttonActionParameters: {
                           "screen": FormOutput(
-                              testForm: storage.getElement('test') != -1
-                                  ? storage.data[storage.getElement('test')]
-                                          .data.isNotEmpty
-                                      ? storage.data[storage.getElement('test')]
-                                          .data.first
-                                      : FormData.empty(
-                                          type: "test", keys: testData)
-                                  : FormData.empty(
-                                      type: "test", keys: testData)) as dynamic
+                              testForm: storage.getEntryIndex('test') != -1
+                                  ? storage.dataEntries[storage.getEntryIndex('test')].data.isNotEmpty
+                                      ? storage.dataEntries[storage.getEntryIndex('test')].data.first
+                                      : FormData.empty(type: "test", keys: testData)
+                                  : FormData.empty(type: "test", keys: testData)) as dynamic
                         }),
                     PrimaryButton(
                       buttonName: "Save",

@@ -247,7 +247,7 @@ class FormInput extends StatelessWidget {
   FormInput({super.key, required this.formFields, required this.buttons}) {
     data = FormData.empty(keys: testData, type: 'test');
     for (var formField in formFields) {
-      formField.update = data;
+      formField.updateEntry = data;
     }
   }
 
@@ -262,7 +262,6 @@ class FormInput extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     addFunctions(context);
@@ -271,10 +270,7 @@ class FormInput extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (var formField in formFields) ...{
-            formField,
-            const SizedBox(height: 12)
-          },
+          for (var formField in formFields) ...{formField, const SizedBox(height: 12)},
           buttons
         ],
       ),

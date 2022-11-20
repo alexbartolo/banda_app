@@ -25,8 +25,7 @@ Future dateButtonAction(BuildContext context) async {
 }
 
 Future timeButtonAction(BuildContext context) async {
-  return (await showTimePicker(context: context, initialTime: TimeOfDay.now()))
-      ?.format(context) as String;
+  return (await showTimePicker(context: context, initialTime: TimeOfDay.now()))?.format(context) as String;
 }
 
 void adjust(Map parameters) {
@@ -34,14 +33,11 @@ void adjust(Map parameters) {
 }
 
 void openFullScreen(Map parameters) {
-  Navigator.push(parameters['context'],
-      MaterialPageRoute(builder: (context) => parameters['screen']));
+  Navigator.push(parameters['context'], MaterialPageRoute(builder: (context) => parameters['screen']));
 }
 
 void openModalScreen(Map parameters) {
-  showModalBottomSheet(
-      context: parameters['context'],
-      builder: (context) => parameters['screen']);
+  showModalBottomSheet(context: parameters['context'], builder: (context) => parameters['screen']);
 }
 
 void resetScreen(Map parameters) {
@@ -58,6 +54,6 @@ void save(Map parameters) {
 
   if (form!.validate()) {
     form.save();
-    storage.update(parameters['data']);
+    storage.updateEntry(parameters['data']);
   }
 }

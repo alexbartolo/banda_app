@@ -41,14 +41,14 @@ class Storage {
 
   set addNewEntry(DataEntry test) => dataEntries.add(test);
 
-  void updateEntry(FormData newData) {
-    var element = getEntryIndex(newData.type);
+  void updateEntry(FormData newData, List<String> keys, String type) {
+    var element = getEntryIndex(type);
 
     element != -1
         ? dataEntries[element].data.add(newData)
-        : addNewEntry = DataEntry(type: newData.type, keys: newData.keys, data: [newData]);
+        : addNewEntry = DataEntry(type: type, keys: keys, data: [newData]);
 
-    write(newData.type);
+    write(type);
   }
 
   Future<File> write(String fileName) async {
@@ -62,16 +62,15 @@ class Storage {
       final file = await _localFile(fileName);
       String fileContent = utf8.decode(await file.readAsBytes());
 
-      Map filess = json.decode(fileContent);
+      Map dataEntry = json.decode(fileContent);
 
       return DataEntry(
-          type: filess["type"],
-          keys: (filess["keys"] as List).map<String>((e) => e as String).toList(),
-          data: (filess["data"] as List)
+          type: dataEntry["type"],
+          keys: (dataEntry["keys"] as List).map<String>((key) => key as String).toList(),
+          data: (dataEntry["data"] as List)
               .map<FormData>(
-                (e) => FormData.from(
-                  type: fileName,
-                  newData: e,
+                (data) => FormData.from(
+                  newData: data,
                   keys: testData,
                 ),
               )

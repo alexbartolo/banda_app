@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../components/input.component.dart';
-import '../models/form.model.dart';
 import 'global.utils.dart';
 
 enum ButtonType { reset, adjust, openFullScreen, openModalScreen, save }
@@ -54,6 +52,6 @@ void save(Map parameters) {
 
   if (form!.validate()) {
     form.save();
-    storage.updateEntry(parameters['data']);
+    storage.updateEntry(parameters['data'], parameters['keys'], parameters['type']);
   }
 }

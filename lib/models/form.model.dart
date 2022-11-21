@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 class FormData {
-  final String type;
-  final List<String> keys;
+  // final String type;
+  // final List<String> keys;
   late Map<String, dynamic> data;
 
-  FormData.empty({required this.type, required this.keys}) {
+  // FormData.empty({required this.type, required this.keys}) {
+  FormData.empty() {
     data = {};
   }
 
-  FormData.from({required this.type, required Map<String, dynamic> newData, required this.keys}) {
+  // FormData.from({required this.type, required Map<String, dynamic> newData, required this.keys}) {
+  FormData.from({required Map<String, dynamic> newData, required List<String> keys}) {
     bool validFlag = true;
 
     for (var key in newData.keys) {
@@ -21,9 +23,9 @@ class FormData {
 
   set update(Map<String, dynamic> newDataEntries) {
     newDataEntries.forEach((key, value) {
-      if (keys.contains(key)) {
+      // if (keys.contains(key)) {
         data[key] = value;
-      }
+      // }
     });
   }
 

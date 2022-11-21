@@ -241,13 +241,16 @@ class FormInput extends StatelessWidget {
 
   late final List formFields;
   late final ButtonGroup buttons;
+  final List<String> keys;
+  final String type;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  FormInput({super.key, required this.formFields, required this.buttons}) {
-    data = FormData.empty(keys: testData, type: 'test');
+  FormInput({super.key, required this.formFields, required this.buttons, required this.keys, required this.type}) {
+    // data = FormData.empty(keys: testData, type: 'test');
+    data = FormData.empty();
     for (var formField in formFields) {
-      formField.updateEntry = data;
+      formField.update = data;
     }
   }
 
@@ -257,7 +260,7 @@ class FormInput extends StatelessWidget {
 
   void addFunctions(BuildContext context) {
     for (Button button in buttons.buttons) {
-      button.addParameters({"context": context, "formKey": _formKey, "formFields": formFields, "data": data});
+      button.addParameters({"context": context, "formKey": _formKey, "formFields": formFields, "data": data, "type": type, "keys": keys});
       button.addFunction = () => buttonFunctions[button.buttonType]!(button.buttonActionParameters);
     }
   }

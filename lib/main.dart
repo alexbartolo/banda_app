@@ -76,6 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               FormInput(
+                type: "test",
+                keys: testData,
                 formFields: [
                   TextInput(inputName: "name", inputType: "name", inputIcon: const Icon(Icons.face)),
                   TextInput(inputName: "text", inputType: "text", inputIcon: const Icon(Icons.text_fields)),
@@ -104,9 +106,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           "screen": FormOutput(
                               testForm: storage.getEntryIndex('test') != -1
                                   ? storage.dataEntries[storage.getEntryIndex('test')].data.isNotEmpty
-                                      ? storage.dataEntries[storage.getEntryIndex('test')].data.first
-                                      : FormData.empty(type: "test", keys: testData)
-                                  : FormData.empty(type: "test", keys: testData)) as dynamic
+                                      ? storage.dataEntries[storage.getEntryIndex('test')].data.last
+                                      : FormData.empty()
+                                  : FormData.empty()) as dynamic
                         }),
                     PrimaryButton(
                       buttonName: "Save",

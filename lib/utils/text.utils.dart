@@ -1,53 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:banda_app/utils/validations.utils.dart';
 
-const Map<String, TextStyle> textStyles = {
-  "Page Title": TextStyle(fontSize: 48, fontWeight: FontWeight.w700),
-  "Title": TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
-  "Subtitle": TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
-  "Header": TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
-  "Body": TextStyle(fontSize: 24),
-  "Selected List Item": TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-  "Unselected List Item": TextStyle(fontSize: 24),
-  "Button": TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
-};
+enum TextDesign {
+  pageTitle(TextStyle(fontSize: 48, fontWeight: FontWeight.w700)),
+  title(TextStyle(fontSize: 40, fontWeight: FontWeight.w600)),
+  subtitle(TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
+  header(TextStyle(fontSize: 26, fontWeight: FontWeight.w600)),
+  body(TextStyle(fontSize: 24)),
+  selectedListItem(TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+  unselectedListItem(TextStyle(fontSize: 24)),
+  button(TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
 
-class TextInputInformation {
-  final TextInputType textInputType;
-  TextInputFormatter? textEditingFormatter;
-  TextCapitalization? textCapitalization;
-  final String? Function(String?) validator;
-
-  TextInputInformation.number(
-      {required this.textInputType, required this.textEditingFormatter, required this.validator}) {
-    textCapitalization = TextCapitalization.none;
-  }
-
-  TextInputInformation.string(
-      {required this.textInputType, required this.textCapitalization, required this.validator}) {
-    textEditingFormatter = MaskTextInputFormatter();
-  }
+  const TextDesign(this.style);
+  final TextStyle style;
 }
 
-Map<String, TextInputInformation> textInputInformationTypes = {
-  "date": TextInputInformation.number(
-      textInputType: TextInputType.datetime,
-      textEditingFormatter: MaskTextInputFormatter(mask: "##/##/####", filter: {"#": RegExp(r'[0-9]')}),
-      validator: validateDate),
-  "time": TextInputInformation.number(
-      textInputType: TextInputType.datetime,
-      textEditingFormatter: MaskTextInputFormatter(mask: "##:##", filter: {"#": RegExp(r'[0-9]')}),
-      validator: validateTime),
-  "phone": TextInputInformation.number(
-      textInputType: TextInputType.phone,
-      textEditingFormatter: MaskTextInputFormatter(mask: "########", filter: {"#": RegExp(r'[0-9]')}),
-      validator: validatePhone),
-  "email": TextInputInformation.string(
-      textInputType: TextInputType.emailAddress, textCapitalization: TextCapitalization.none, validator: validateEmail),
-  "name": TextInputInformation.string(
-      textInputType: TextInputType.name, textCapitalization: TextCapitalization.words, validator: validateName),
-  "text": TextInputInformation.string(
-      textInputType: TextInputType.text, textCapitalization: TextCapitalization.sentences, validator: validateText)
-};
+enum InputType {
+  date.number(textInputType: TextInputType.datetime, textEditingMask: "##/##/####", validator: validateDate),
+  time.number(textInputType: TextInputType.datetime, textEditingMask: "##:##", validator: validateTime),
+  phone.number(textInputType: TextInputType.phone, textEditingMask: "########", validator: validatePhone),
+  email.string(textInputType: TextInputType.emailAddress, textCapitalization: TextCapitalization.none, validator: validateEmail),
+  name.string(textInputType: TextInputType.name, textCapitalization: TextCapitalization.words, validator: validateName),
+  text.string(textInputType: TextInputType.text, textCapitalization: TextCapitalization.sentences, validator: validateText);
+
+  const InputType.number({required this.textInputType, required this.textEditingMask, required this.validator, this.textCapitalization = TextCapitalization.none});
+  const InputType.string({required this.textInputType, required this.textCapitalization, required this.validator, this.textEditingMask = ""});
+
+  final TextInputType textInputType;
+  final String textEditingMask;
+  final TextCapitalization? textCapitalization;
+  final String? Function(String?) validator;
+}

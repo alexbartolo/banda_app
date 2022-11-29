@@ -1,3 +1,4 @@
+import 'package:banda_app/utils/text.utils.dart';
 import 'package:flutter/material.dart';
 import 'package:banda_app/components/output.component.dart';
 import 'package:banda_app/utils/button.utils.dart';
@@ -36,7 +37,7 @@ class PrimaryButton extends Button {
             foregroundColor: Colors.white,
             shadowColor: Colors.transparent,
             padding: const EdgeInsets.only(left: 24, right: 24)),
-        child: TextOutput(textOutputBody: buttonName, textOutputStyle: "Button"));
+        child: TextOutput(textOutputBody: buttonName, textOutputStyle: TextDesign.button));
   }
 }
 
@@ -49,7 +50,7 @@ class SecondaryButton extends Button {
         onPressed: buttonAction,
         style: OutlinedButton.styleFrom(
             side: const BorderSide(color: Colors.blue), padding: const EdgeInsets.only(left: 24, right: 24)),
-        child: TextOutput(textOutputBody: buttonName, textOutputStyle: "Button"));
+        child: TextOutput(textOutputBody: buttonName, textOutputStyle: TextDesign.button));
   }
 }
 

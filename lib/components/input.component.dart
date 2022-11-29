@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:banda_app/components/output.component.dart';
 import 'package:banda_app/components/button.component.dart';
 import 'package:banda_app/models/form.model.dart';
-import 'package:banda_app/utils/button.utils.dart';
 import 'package:banda_app/utils/text.utils.dart';
 import 'package:banda_app/utils/validations.utils.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class Input {
   late final FormData data;
@@ -16,14 +15,12 @@ class Input {
 
 class TextInput extends StatelessWidget with Input {
   final String inputName;
-  final String inputType;
+  final InputType inputType;
   final Icon? inputIcon;
   late final TextEditingController _textEditingController;
-  late final TextInputInformation _textInputInformation;
 
   TextInput({super.key, required this.inputName, required this.inputType, this.inputIcon}) {
     _textEditingController = TextEditingController();
-    _textInputInformation = textInputInformationTypes[inputType] as TextInputInformation;
   }
 
   @override
@@ -34,7 +31,7 @@ class TextInput extends StatelessWidget with Input {
           decoration: InputDecoration(
             prefixIcon: inputIcon,
             labelText: inputName,
-            labelStyle: textStyles["Body"],
+            labelStyle: TextDesign.body.style,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
             enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.black, width: 0.0),
@@ -42,17 +39,17 @@ class TextInput extends StatelessWidget with Input {
             ),
           ),
           controller: _textEditingController,
-          keyboardType: _textInputInformation.textInputType,
-          textCapitalization: _textInputInformation.textCapitalization as TextCapitalization,
-          inputFormatters: [_textInputInformation.textEditingFormatter as TextInputFormatter],
-          validator: _textInputInformation.validator,
+          keyboardType: inputType.textInputType,
+          textCapitalization: inputType.textCapitalization as TextCapitalization,
+          inputFormatters: [MaskTextInputFormatter(mask: inputType.textEditingMask)],
+          validator: inputType.validator,
           onSaved: (newValue) {
             data.update = {inputName: newValue};
           },
         ),
       ),
-      if (inputType == "date") DateButton(textEditingController: _textEditingController),
-      if (inputType == "time") TimeButton(textEditingController: _textEditingController)
+      if (inputType == InputType.date) DateButton(textEditingController: _textEditingController),
+      if (inputType == InputType.time) TimeButton(textEditingController: _textEditingController)
     ]);
   }
 }
@@ -86,7 +83,7 @@ class CheckboxInputState extends State<CheckboxInput> {
       child: CheckboxListTile(
         title: TextOutput(
           textOutputBody: widget.checkboxName,
-          textOutputStyle: _value ? "Selected List Item" : "Unselected List Item",
+          textOutputStyle: _value ? TextDesign.selectedListItem : TextDesign.unselectedListItem,
         ),
         controlAffinity: ListTileControlAffinity.leading,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -128,7 +125,7 @@ class _DropdownInputState extends State<DropdownInput> {
             borderRadius: BorderRadius.circular(20),
           ),
           prefixIcon: widget.dropdownIcon,
-          label: TextOutput(textOutputBody: widget.dropdownName, textOutputStyle: "Body"),
+          label: TextOutput(textOutputBody: widget.dropdownName, textOutputStyle: TextDesign.body),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         ),
         items: widget.dropdownOptions
@@ -225,7 +222,7 @@ class RadioOptionState extends State<RadioOption> {
           border: Border.all(color: Colors.grey, width: 1),
         ),
         child: ListTile(
-          title: TextOutput(textOutputBody: widget.radioTitle, textOutputStyle: "Body"),
+          title: TextOutput(textOutputBody: widget.radioTitle, textOutputStyle: TextDesign.body),
           leading: widget.radioIcon,
           trailing: widget.radioTitle == widget.chosenRadio
               ? const Icon(Icons.check_circle, color: Colors.blue)
@@ -247,7 +244,6 @@ class FormInput extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   FormInput({super.key, required this.formFields, required this.buttons, required this.keys, required this.type}) {
-    // data = FormData.empty(keys: testData, type: 'test');
     data = FormData.empty();
     for (var formField in formFields) {
       formField.update = data;
@@ -261,7 +257,7 @@ class FormInput extends StatelessWidget {
   void addFunctions(BuildContext context) {
     for (Button button in buttons.buttons) {
       button.addParameters({"context": context, "formKey": _formKey, "formFields": formFields, "data": data, "type": type, "keys": keys});
-      button.addFunction = () => buttonFunctions[button.buttonType]!(button.buttonActionParameters);
+      button.addFunction = () => button.buttonType.function(button.buttonActionParameters);
     }
   }
 

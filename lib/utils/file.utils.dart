@@ -37,9 +37,10 @@ class DataEntry {
 class Storage {
   List<DataEntry> dataEntries = <DataEntry>[];
 
-  int getEntryIndex(String type) => dataEntries.indexWhere((element) => element.type == type);
+  int getEntryIndex(String type) =>
+      dataEntries.indexWhere((element) => element.type == type);
 
-  set addNewEntry(DataEntry test) => dataEntries.add(test);
+  set addNewEntry(DataEntry dataEntry) => dataEntries.add(dataEntry);
 
   void updateEntry(FormData newData, List<String> keys, String type) {
     var element = getEntryIndex(type);
@@ -54,7 +55,8 @@ class Storage {
   Future<File> write(String fileName) async {
     final file = await _localFile(fileName);
 
-    return file.writeAsBytes(utf8.encode(dataEntries[getEntryIndex(fileName)].toString()));
+    return file.writeAsBytes(
+        utf8.encode(dataEntries[getEntryIndex(fileName)].toString()));
   }
 
   Future<DataEntry> read(String fileName) async {
@@ -63,18 +65,14 @@ class Storage {
       String fileContent = utf8.decode(await file.readAsBytes());
 
       Map dataEntry = json.decode(fileContent);
+      List<String> keys = (dataEntry["keys"] as List)
+          .map<String>((key) => key as String)
+          .toList();
 
       return DataEntry(
           type: dataEntry["type"],
-          keys: (dataEntry["keys"] as List).map<String>((key) => key as String).toList(),
-          data: (dataEntry["data"] as List)
-              .map<FormData>(
-                (data) => FormData.from(
-                  newData: data,
-                  keys: testData,
-                ),
-              )
-              .toList());
+          keys: keys,
+          data: (dataEntry["data"] as List).map<FormData>((data) => FormData.from(newData: data, keys: keys)).toList());
     } catch (error) {
       return DataEntry.empty();
     }

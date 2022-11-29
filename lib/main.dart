@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:banda_app/models/form.model.dart';
 import 'package:banda_app/utils/button.utils.dart';
-import 'package:banda_app/utils/file.utils.dart';
+import 'package:banda_app/utils/text.utils.dart';
 import 'package:flutter/material.dart';
 import 'package:banda_app/components/button.component.dart';
 import 'package:banda_app/components/input.component.dart';
@@ -79,12 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 type: "test",
                 keys: testData,
                 formFields: [
-                  TextInput(inputName: "name", inputType: "name", inputIcon: const Icon(Icons.face)),
-                  TextInput(inputName: "text", inputType: "text", inputIcon: const Icon(Icons.text_fields)),
-                  TextInput(inputName: "phone", inputType: "phone", inputIcon: const Icon(Icons.phone)),
-                  TextInput(inputName: "time", inputType: "time", inputIcon: const Icon(Icons.access_time)),
-                  TextInput(inputName: "date", inputType: "date", inputIcon: const Icon(Icons.calendar_month)),
-                  TextInput(inputName: "email", inputType: "email", inputIcon: const Icon(Icons.email_outlined)),
+                  TextInput(inputName: "name", inputType: InputType.name, inputIcon: const Icon(Icons.face)),
+                  TextInput(inputName: "text", inputType: InputType.text, inputIcon: const Icon(Icons.text_fields)),
+                  TextInput(inputName: "phone", inputType: InputType.phone, inputIcon: const Icon(Icons.phone)),
+                  TextInput(inputName: "time", inputType: InputType.time, inputIcon: const Icon(Icons.access_time)),
+                  TextInput(inputName: "date", inputType: InputType.date, inputIcon: const Icon(Icons.calendar_month)),
+                  TextInput(inputName: "email", inputType: InputType.email, inputIcon: const Icon(Icons.email_outlined)),
                   CheckboxInput(checkboxName: "checkbox"),
                   DropdownInput(
                     dropdownName: "dropdown",

@@ -30,7 +30,7 @@ class DataEntry {
 
   @override
   String toString() {
-    return "{\"type\": \"$type\", \"keys\": ${json.encode(keys)}, \"data\": ${data.toString()}}";
+    return '{"type": "$type", "keys": ${json.encode(keys)}, "data": ${data.toString()}}';
   }
 }
 
@@ -38,15 +38,15 @@ class Storage {
   List<DataEntry> dataEntries = <DataEntry>[];
 
   int getEntryIndex(String type) =>
-      dataEntries.indexWhere((element) => element.type == type);
+      dataEntries.indexWhere((entry) => entry.type == type);
 
   set addNewEntry(DataEntry dataEntry) => dataEntries.add(dataEntry);
 
   void updateEntry(FormData newData, List<String> keys, String type) {
-    var element = getEntryIndex(type);
+    var entryIndex = getEntryIndex(type);
 
-    element != -1
-        ? dataEntries[element].data.add(newData)
+    entryIndex != -1
+        ? dataEntries[entryIndex].data.add(newData)
         : addNewEntry = DataEntry(type: type, keys: keys, data: [newData]);
 
     write(type);

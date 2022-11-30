@@ -1,16 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter_guid/flutter_guid.dart';
+
 class FormData {
-  // final String type;
-  // final List<String> keys;
+  late Guid id;
   late Map<String, dynamic> data;
 
-  // FormData.empty({required this.type, required this.keys}) {
   FormData.empty() {
     data = {};
   }
 
-  // FormData.from({required this.type, required Map<String, dynamic> newData, required this.keys}) {
   FormData.from({required Map<String, dynamic> newData, required List<String> keys}) {
     bool validFlag = true;
 
@@ -19,13 +18,12 @@ class FormData {
     }
 
     if (validFlag) data = newData;
+    id = Guid.newGuid;
   }
 
   set update(Map<String, dynamic> newDataEntries) {
     newDataEntries.forEach((key, value) {
-      // if (keys.contains(key)) {
-        data[key] = value;
-      // }
+      data[key] = value;
     });
   }
 
